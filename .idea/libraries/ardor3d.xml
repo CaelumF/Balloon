@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ardor3d">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/rendering/ardor3D.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

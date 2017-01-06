@@ -1,10 +1,9 @@
-package com.gmail.caelum119.balloon.world.scenegraph
+package com.gmail.caelum119.balloon.world.scenegraph.model_loading
 
 import com.ardor3d.scenegraph.Spatial
 import com.bulletphysics.collision.dispatch.CollisionObject
-import com.gmail.caelum119.balloon.world.scenegraph.GeneralEntity
+import com.gmail.caelum119.balloon.world.scenegraph.Chunk
 import com.gmail.caelum119.balloon.world.scenegraph.PhysicalEntity
-import com.gmail.caelum119.balloon.world.scenegraph.VisualEntity
 
 /**
  * First created 6/6/2016 in Engine
@@ -20,11 +19,9 @@ open class ModelConstruct<E>(val visualA3DConstructor: (argument: E) -> Spatial,
 //        Node().let { it.attachChild(spatial.makeCopy(reuseGeometricData)); return it }
 //    }
 
-    fun getGeneralEntityCopy(constructionParameters: E, residingChunk: Chunk): GeneralEntity {
-        val ge = GeneralEntity(residingChunk)
-        ge.visualEntity = VisualEntity(visualA3DConstructor.invoke(constructionParameters), ge)
-        ge.physicalEntity = PhysicalEntity(physicalJBConstructor.invoke(constructionParameters))
-        return ge
+    fun getGeneralEntityCopy(constructionParameters: E, residingChunk: Chunk): PhysicalEntity {
+        val physicalEntity = PhysicalEntity(physicalJBConstructor.invoke(constructionParameters), residingChunk)
+        return physicalEntity
     }
 
     open class ConstructorParameters(vararg variableParameters: Any) {

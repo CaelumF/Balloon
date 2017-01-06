@@ -1,4 +1,4 @@
-package com.gmail.caelum119.balloon.world.object_sync
+package com.gmail.caelum119.balloon.world.object_sync.deprecated
 
 import java.util.*
 import kotlin.reflect.KProperty
@@ -6,6 +6,7 @@ import kotlin.reflect.KProperty
 /**
  * First created 10/9/2016 in BalloonEngine
  */
+@Deprecated("Kotlin-friedly object syncing in the works at NetworkSyncalbeProperty.kt")
 interface TransferableObject {
     /**
      * To differentiate this Syncable object from others.
@@ -16,7 +17,7 @@ interface TransferableObject {
     var TransferableObjectId: Long
 
     /**
-     * List of modified properties.
+     * List of modified propertyList.
      */
     val modifiedProperties: HashMap<KProperty<*>, Any>
 

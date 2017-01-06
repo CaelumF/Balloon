@@ -10,5 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jBullet" level="project" />
+    <orderEntry type="library" name="de.ruedigermoeller:fst:2.43" level="project" />
   </component>
 </module>

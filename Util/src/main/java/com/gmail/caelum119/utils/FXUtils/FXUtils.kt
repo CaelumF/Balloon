@@ -14,6 +14,6 @@ object  FXUtils {
     top?.let { AnchorPane.setTopAnchor(node, top)}
     bottom.let { AnchorPane.setBottomAnchor(node, bottom) }
     right?.let { AnchorPane.setRightAnchor(node, right) }
-    left?.let { AnchorPane.setLeftAnchor(node, right) }
+    left?.let { AnchorPane.setLeftAnchor(node, left) }
   }
 }

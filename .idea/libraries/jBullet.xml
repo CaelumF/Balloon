@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="jBullet">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/physics/jbullet" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/physics/jbullet" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/physics/jbullet" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/physics/jbullet" recursive="false" type="SOURCES" />
+  </library>
+</component>

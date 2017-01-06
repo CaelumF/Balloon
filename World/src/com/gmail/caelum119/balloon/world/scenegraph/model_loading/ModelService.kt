@@ -1,4 +1,4 @@
-package com.gmail.caelum119.scenegraph
+package com.gmail.caelum119.balloon.world.scenegraph.model_loading
 
 
 import com.ardor3d.image.Texture
@@ -9,7 +9,6 @@ import com.ardor3d.util.TextureManager
 import com.bulletphysics.collision.shapes.SphereShape
 import com.bulletphysics.dynamics.RigidBody
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo
-import com.gmail.caelum119.balloon.world.scenegraph.ModelConstruct
 import java.util.*
 import javax.vecmath.Vector3f
 import com.ardor3d.scenegraph.shape.Sphere as A3DSphere

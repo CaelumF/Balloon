@@ -7,33 +7,35 @@ import kotlin.reflect.KClass
 /**
  * First created 10/9/2016 in BalloonEngine
  */
-class ExampleTransmittableClass(){
+class ExampleTransmittableClass() {
     var x: Double = 0.0
     var y: Double = 0.0
     var z: Double = 0.0
 
     init {
-        defineSyncableRuleset<ExampleTransmittableClass, test> { saidObject ->
+        defineSyncMethod<ExampleTransmittableClass, TransmittablePropertySequence> { saidObject ->
 
+            addProperties(ExampleTransmittableClass::x, ExampleTransmittableClass::y)
             addProperty(ExampleTransmittableClass::x)
             addProperty(ExampleTransmittableClass::y)
             addProperty(ExampleTransmittableClass::z)
 
-            setRetriever {
-                it.x
+            importantPropertyRetriever = {
+                getTPSFromProperties(saidObject)
             }
 
-            builder {
+            instanceBuilder {
                 val exampleTransmittableClass = ExampleTransmittableClass()
                 reflectValuesOnto(exampleTransmittableClass)
-                return@builder exampleTransmittableClass
+                return@instanceBuilder exampleTransmittableClass
             }
         }
     }
 }
 
-object InformationGatherers {
-    val informationGathererMap = HashMap<KClass<*>, (Any) -> TransmittablePropertySequence<*>>()
+object DefaultInformationGatherers {
+    val informationGathererMap = HashMap<KClass<*>, (Any) -> TransmittablePropertySequence>()
+
     init {
 
         /**
@@ -52,20 +54,7 @@ object InformationGatherers {
         }
     }
 
-    inline fun <reified T> addInformationGatherer(noinline transmittablePropertySequence: (T) -> TransmittablePropertySequence<T>): Unit {
-        informationGathererMap.put(T::class, transmittablePropertySequence as (Any) -> TransmittablePropertySequence<T>)
+    inline fun <reified T> addInformationGatherer(noinline transmittablePropertySequence: (T) -> TransmittablePropertySequence): Unit {
+        informationGathererMap.put(T::class, transmittablePropertySequence as (Any) -> TransmittablePropertySequence)
     }
-}
-
-data class test(var d: Int)
-class test2() : TransferableObjectImpl() {
-    var test3: Int by networkSyncable({ 4 }, this)
-
-    init {
-        test3++
-    }
-}
-
-fun main(args: Array<String>) {
-    test2()
 }

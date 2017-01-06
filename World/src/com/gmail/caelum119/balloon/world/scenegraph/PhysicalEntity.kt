@@ -10,8 +10,6 @@ import com.ardor3d.util.TextureManager
 import com.bulletphysics.collision.dispatch.CollisionObject
 import com.bulletphysics.dynamics.RigidBody
 import com.bulletphysics.linearmath.Transform
-import com.gmail.caelum119.balloon.world.object_sync.TransferableObjectImpl
-import com.gmail.caelum119.balloon.world.object_sync.networkSyncable
 import java.util.*
 import javax.vecmath.Quat4f
 import javax.vecmath.Tuple3f
@@ -19,13 +17,11 @@ import javax.vecmath.Vector3f
 
 /**;
  * First created 5/16/2016 in Engine
- * Wrapper for JBullet object, with physical geometries, properties etc.
+ * Wrapper for JBullet object, with physical geometries, propertyList etc.
  */
-open class PhysicalEntity(jbObject: CollisionObject) : TransferableObjectImpl() {
+open class PhysicalEntity(jbObject: CollisionObject, residingChunk: Chunk) : GeneralEntity(residingChunk) {
 
-    val jbObject: CollisionObject by networkSyncable({ jbObject }, this)
-
-    var partOf: GeneralEntity? = null
+    val jbObject: CollisionObject = CollisionObject()
     val onPhysicalInfoUpdate = ArrayList<(updating: PhysicalEntity) -> Unit>()
 
     init {
@@ -35,8 +31,8 @@ open class PhysicalEntity(jbObject: CollisionObject) : TransferableObjectImpl() 
                 TextureStoreFormat.GuessCompressedFormat, true)
 
         val testSphere = Sphere("Sphere", 32, 32, 1.0)
-        testSphere!!.modelBound = BoundingBox()
-        testSphere!!.setRenderState(ts)
+        testSphere.modelBound = BoundingBox()
+        testSphere.setRenderState(ts)
     }
 
     /**

@@ -22,17 +22,18 @@ import com.ardor3d.ui.text.BasicText
 import com.ardor3d.util.ReadOnlyTimer
 import com.ardor3d.util.TextureManager
 import com.bulletphysics.collision.shapes.StaticPlaneShape
+import com.gmail.caelum119.balloon.client.ClientEngine
+import com.gmail.caelum119.balloon.world.engine.components.perception.Perspective
 import com.gmail.caelum119.balloon.world.scenegraph.Chunk
-import com.gmail.caelum119.balloon.world.scenegraph.VisualEntity
+import com.gmail.caelum119.balloon.world.scenegraph.GeneralEntity
 import java.util.*
-import javax.vecmath.Vector3f
 
 
 /**
  * First created 5/11/2016 in Client
  * Renders the world as described by the local client engine
  */
-class A3DVBOWorldRenderer : Ardor3DRendererBase() {
+class A3DVBOWorldRenderer(val clengine: ClientEngine) : Ardor3DRendererBase() {
     private var frameRateLabel: BasicText? = null
     private var frames = 0
     private var startTime = System.currentTimeMillis()
@@ -40,7 +41,7 @@ class A3DVBOWorldRenderer : Ardor3DRendererBase() {
     private var testSphere: Sphere? = null
 
     lateinit var chunk: Chunk
-    val renderableEntities = ArrayList<VisualEntity>()
+
     val tasks = ArrayList<Runnable>()
 
     override fun updateExample(timer: ReadOnlyTimer) {
@@ -52,10 +53,6 @@ class A3DVBOWorldRenderer : Ardor3DRendererBase() {
             frameRateLabel!!.text = "FPS: $fps, TPS: ${chunk.DTPS}, Vertices: ${_root.children.size * 32 * 2}"
             startTime = now
             frames = 0
-        }
-
-        for (entity in renderableEntities) {
-            entity.updateVisualInformation()
         }
 
         frames++
@@ -89,16 +86,19 @@ class A3DVBOWorldRenderer : Ardor3DRendererBase() {
 
     override fun initExample() {
         _canvas.setTitle("VBOSpeedExample")
+
         //Add the sphere on the floor
         val cs = CullState()
         cs.cullFace = CullState.Face.Back
         cs.isEnabled = false
         _root.setRenderState(cs)
 
+        //Set global, default material.
         val ms = MaterialState()
         ms.colorMaterial = MaterialState.ColorMaterial.Diffuse
         _root.setRenderState(ms)
 
+        //Not essential
         val ts = TextureState()
         ts.isEnabled = true
         ts.texture = TextureManager.load("images/ardor3d_white_256.jpg", Texture.MinificationFilter.Trilinear,
@@ -107,29 +107,13 @@ class A3DVBOWorldRenderer : Ardor3DRendererBase() {
         val sphereBase = Node("node")
         _root.attachChild(sphereBase)
 
-        val rand = Random(1337)
-        //        for(int i = 0; i < 300; i++){
-        //            final Sphere sphere = new Sphere("Sphere", 32, 32, 2);
-        //            sphere.setRandomColors();
-        //            sphere.setModelBound(new BoundingBox());
-        //            sphere.setRenderState(ts);
-        //            sphere.setTranslation(new Vector3(rand.nextDouble() * 100.0 - 50.0, rand.nextDouble() * 100.0 - 50.0, rand
-        //                    .nextDouble() * 100.0 - 250.0));
-        //
-        //            sphereBase.attachChild(sphere);
-        //        }
 
         testSphere = Sphere("Sphere", 32, 32, 1.0)
         testSphere!!.modelBound = BoundingBox()
         testSphere!!.setRenderState(ts)
         sphereBase.attachChild(testSphere)
 
-        _logicalLayer.registerTrigger(InputTrigger(KeyPressedCondition(Key.SPACE), TriggerAction { source, inputStates, tpf ->
-            tasks.add(Runnable {
-                chunk.createSphere(Math.max(rand.nextFloat() * 4, 1f), Vector3f(0f + (rand.nextFloat() * 200), 30.0f * rand.nextFloat(), 200 * rand.nextFloat()))
-            })
-//            chunk.createSphere(10f, Vector3f(Random().nextFloat() * 400, 50.0f, Random().nextFloat() * 400))
-        }))
+
 
         _logicalLayer.registerTrigger(InputTrigger(KeyPressedCondition(Key.G), TriggerAction { source, inputStates, tpf ->
             chunk.JBulletPhysics.dynamicsWorld.stepSimulation(1 / 1000f, 1)
@@ -145,8 +129,10 @@ class A3DVBOWorldRenderer : Ardor3DRendererBase() {
         frameRateLabel!!.sceneHints.orthoOrder = -1
         _root.attachChild(frameRateLabel)
 
+        //Temporary test code. Chunks should rarely be constructed by the client, little owe the Renderer.
+        /*
         chunk = Chunk(0, 0, 0)
-        //When an entity with a visual presence is added the local JBI's scenegraph, add it to our list of renderable entities
+        //When an entity with a visual presence is added the local JBI's scenegraph, add it to our list of renderable allEntities
         chunk.onEntityCreateListeners.add { entityAdded ->
             tasks.add(Runnable {
                 entityAdded.visualEntity?.let {
@@ -155,13 +141,24 @@ class A3DVBOWorldRenderer : Ardor3DRendererBase() {
                     renderableEntities.add(it)
                 }
             })
-        }
-        visualiseCollisions()
-    }
+        }*/
 
-    companion object {
-        @JvmStatic fun main(args: Array<String>) {
-            start(A3DVBOWorldRenderer::class.java)
+        visualiseCollisions()
+
+        /*
+            Add listener to all chunks with at least one Perspective component and their surrounding chunks to attach-
+            newly added(or transferred) visual entities to the root a3d node (as children)
+        */
+        for (chunk in clengine.chunks) {
+            chunk.getComponentsByType(Perspective::class)
+                    .forEach { persComponent -> //Every Perspective component in every Chunk V
+                        persComponent.attachedEntity.events.addListener { newChunkE: GeneralEntity.EventTypes.E_CHUNK_CHANGED ->
+                            for (visualEntity in newChunkE.newChunk.) {
+                                visualEntity
+                            }
+                        }
+                    }
         }
+
     }
 }

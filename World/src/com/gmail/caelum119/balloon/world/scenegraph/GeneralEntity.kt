@@ -1,43 +1,52 @@
 package com.gmail.caelum119.balloon.world.scenegraph
-import com.gmail.caelum119.balloon.world.object_sync.TransferableObjectImpl
-import com.gmail.caelum119.scenegraph.Component
+
+import com.gmail.caelum119.balloon.world.engine.components.Component
+import com.gmail.caelum119.utils.event.EventCollection
+import com.gmail.caelum119.utils.event.EventType
+import com.gmail.caelum119.utils.event.ListenerInterface
 import java.util.*
 
 /**
- * Container class with PhysicalEnitty and VisualEntity.
+ * Base entity class for allEntities that exist in 3d space, be them visual or physical.
+ * For anything that exists in the game, with or without a physical location or representation.
+ *
+ * Entities may have Components and their associated Systems attached to them.
  */
 //TODO: Remove smelly-ness regarding having the parent set it's subject's parent for it.
-open class GeneralEntity(val residingChunk: Chunk): TransferableObjectImpl() {
+open class GeneralEntity(residingChunk: CategorizingNSP) {
 
-    var physicalEntity: PhysicalEntity? = null
-        set(value) {
-            //When physicalEntity is set, register each component's physicalTick() to be called appropriately.
-            physicalEntity?.onPhysicalInfoUpdate?.add {
-                allComponents.forEach { it.physicsTick() }
-            }
-            field = value
+    var residingChunk: CategorizingNSP = residingChunk
+        set(newChunk) {
+            eventTrigerer.triggerEvent(EventTypes.E_CHUNK_CHANGED(newChunk))
         }
-    var visualEntity: VisualEntity? = null
-        set(value) {
-            //When visualEntity is set, register each component's visualTick() to be called appropriately.
-            visualEntity?.onVisualInfoUpdate?.add {
-                allComponents.forEach { it.visualTick() }
-            }
-            field = value
-        }
-
     val subModels = ArrayList<GeneralEntity>()
     private val components = HashMap<Class<Component>, ArrayList<Component>>()
     val allComponents = ArrayList<Component>()
 
     fun addComponent(componentToAdd: Component) {
-        var componentListOfThatType: ArrayList<Component> = components[componentToAdd.javaClass]?: ArrayList()
+        eventTrigerer.triggerEvent(EventTypes.E_COMPONENT_ADDED(componentToAdd))
+
+        var componentListOfThatType: ArrayList<Component> = components[componentToAdd.javaClass] ?: ArrayList()
         componentListOfThatType.add(componentToAdd)
         allComponents.add(componentToAdd)
     }
 
-    init {
-        physicalEntity?.partOf = this
-        visualEntity?.partOf = this
+    /**
+     * Returns this as a physical entity, if it is one. Null otherwise.
+     */
+    fun asPhysicalEntity(): PhysicalEntity? {
+        if (this is PhysicalEntity) {
+            return this
+        }
+        return null
     }
+
+    open class EventTypes() : EventCollection() {
+        class E_COMPONENT_ADDED(val componentToAdd: Component) : EventType()
+        class E_COMPONENT_REMOVED(val componentToRemove: Component) : EventType()
+        class E_CHUNK_CHANGED(val newChunk: CategorizingNSP) : EventType()
+    }
+
+    private val eventTrigerer = EventTypes()
+    public val events = ListenerInterface(eventTrigerer)
 }

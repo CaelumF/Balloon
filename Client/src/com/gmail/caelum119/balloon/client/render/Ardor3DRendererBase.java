@@ -333,9 +333,9 @@ public abstract class Ardor3DRendererBase implements Scene, Runnable, Updater{
             return;
         }
 
-        // Ask for properties
+        // Ask for propertyList
         final PropertiesGameSettings prefs = example.getAttributes(new PropertiesGameSettings(
-                "ardorSettings.properties", null));
+                "ardorSettings.propertyList", null));
 
         // Convert to DisplayProperties (XXX: maybe merge these classes?)
         final DisplaySettings settings = new DisplaySettings(prefs.getWidth(), prefs.getHeight(), prefs.getDepth(),
