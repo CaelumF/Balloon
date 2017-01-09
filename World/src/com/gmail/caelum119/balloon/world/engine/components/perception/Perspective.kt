@@ -10,5 +10,5 @@ import com.gmail.caelum119.balloon.world.scenegraph.GeneralEntity
  * For performance reasons,
  */
 class Perspective(attachedEntity: GeneralEntity) : VisualComponent(attachedEntity) {
-    fun getSurroundingVisualEntities() = attachedEntity.residingChunk.allVisualEntities
+    fun getSurroundingVisualEntities() = attachedEntity.residingChunk.getAllVisualEntities()
 }

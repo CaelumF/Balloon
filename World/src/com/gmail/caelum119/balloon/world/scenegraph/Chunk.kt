@@ -4,6 +4,7 @@ import com.ardor3d.math.Vector3
 import com.bulletphysics.collision.dispatch.CollisionObject
 import com.bulletphysics.dynamics.RigidBody
 import com.gmail.caelum119.balloon.world.engine.EngineInstance
+import com.gmail.caelum119.balloon.world.engine.components.Component
 import com.gmail.caelum119.balloon.world.engine.components.physical.Ferrous
 import com.gmail.caelum119.balloon.world.engine.components.physical.Magnetic
 import com.gmail.caelum119.balloon.world.scenegraph.model_loading.ModelService
@@ -23,6 +24,8 @@ import javax.vecmath.Vector3f
  */
 class Chunk(@Transient val residingInstance: EngineInstance, val chunkX: Int, val chunkY: Int, val chunkZ: Int,
             override var parent: Any) : CallbackCategorizingNSPImpl(){
+    override val allComponents = ArrayList<Component>()
+
 
     val JBulletPhysics = BulletPhysicsArea()
 
@@ -42,7 +45,7 @@ class Chunk(@Transient val residingInstance: EngineInstance, val chunkX: Int, va
 
     fun tick() {
         //Invoke all of this chunk's physical entities's physical tick methods.
-        allPhysicalEntities.forEach { pEntity -> pEntity.onPhysicalInfoUpdate.forEach { it.invoke(pEntity) } }
+        getAllPhysicalEntities().forEach { pEntity -> pEntity.onPhysicalInfoUpdate.forEach { it.invoke(pEntity) } }
 
         JBulletPhysics.dynamicsWorld.stepSimulation(1 / 60f, 10)
         TPS++

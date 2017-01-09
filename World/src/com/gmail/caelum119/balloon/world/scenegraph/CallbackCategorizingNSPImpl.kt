@@ -16,25 +16,30 @@ import kotlin.reflect.KClass
  *
  * Whenever a entity or component is added, appropriate [callbacks] will be called.
  */
+//CONSIDER: Instead of housing the event system in this class, simply expose the event system of individual
 abstract class CallbackCategorizingNSPImpl : CategorizingNSP {
 
     override val allEntities = newCallbackArrayList<GeneralEntity, EventTypes.E_ENTITY_ADDED, EventTypes.E_ENTITY_REMOVED>()
-
+//    override val allComponents = newCallbackArrayList<Component, EventTypes.>() blah blah, useless code to be replaced
     val visualEntities = newCallbackArrayList<VisualEntity, EventTypes.E_VISUAL_ENTITY_ADDED, EventTypes.E_VISUAL_ENTITY_ADDED>()
     val physicalEntities = newCallbackArrayList<PhysicalEntity, EventTypes.E_PHYSICAL_ENTITY_ADDED, EventTypes
     .E_PHYSICAL_ENTITY_ADDED>()
     val components = newCallbackArrayList<Component, EventTypes.C_COMPONENT_ADDED, EventTypes.C_COMPONENT_REMOVED>()
-    val physicalEntitiesByType = HashMap<Class<Component>, ArrayList<PhysicalEntity>>()
+    val physicalEntitiesByType = HashMap<Class<PhysicalEntity>, ArrayList<PhysicalEntity>>()
     val componentsByType = HashMap<Class<Component>, ArrayList<Component>>()
     val visualComponents = ArrayList<VisualComponent>()
     val visualComponentsByType = HashMap<Class<Component>, ArrayList<VisualComponent>>()
 
     override fun getAllVisualEntities(): ArrayList<VisualEntity> = visualEntities
     override fun getAllPhysicalEntities(): ArrayList<PhysicalEntity> = physicalEntities
-    override fun getAllPhysicalEntitiesByType(): HashMap<Class<Component>, ArrayList<PhysicalEntity>> = physicalEntitiesByType
+    override fun getAllPhysicalEntitiesByType(): HashMap<Class<PhysicalEntity>, ArrayList<PhysicalEntity>> =
+            physicalEntitiesByType
+
     override fun getAllComponentsByType(): HashMap<Class<Component>, ArrayList<Component>> = componentsByType
     override fun getAllVisualComponents(): ArrayList<VisualComponent> = visualComponents
     override fun getAllVisualComponentsByType(): HashMap<Class<Component>, ArrayList<VisualComponent>> = visualComponentsByType
+
+
 
     /**
      * Private utility function to easily set up the [CallbackArrayList]'s added abd removed callbacks to call
@@ -87,6 +92,7 @@ abstract class CallbackCategorizingNSPImpl : CategorizingNSP {
     open class EventTypes() : EventCollection() {
         /////Entity
         class E_ENTITY_ADDED(val generalEntity: GeneralEntity) : EventType()
+
         class E_ENTITY_REMOVED(val generalEntity: GeneralEntity) : EventType()
 
         class E_PHYSICAL_ENTITY_ADDED(val generalEntity: GeneralEntity) : EventType()
@@ -96,6 +102,7 @@ abstract class CallbackCategorizingNSPImpl : CategorizingNSP {
         class E_VISUAL_ENTITY_REMOVED(val generalEntity: GeneralEntity) : EventType()
         /////Component
         class C_COMPONENT_ADDED(val generalEntity: GeneralEntity) : EventType()
+
         class C_COMPONENT_REMOVED(val generalEntity: GeneralEntity) : EventType()
     }
 
