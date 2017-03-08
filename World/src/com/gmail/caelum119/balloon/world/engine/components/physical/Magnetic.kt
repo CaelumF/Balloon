@@ -10,7 +10,7 @@ import com.gmail.caelum119.balloon.world.scenegraph.PhysicalEntity
  */
 
 
-class Magnetic(val attachedEntity: PhysicalEntity, val scalar: Double) : PhysicalComponent() {
+class Magnetic(attachedEntity: PhysicalEntity, val scalar: Double) : PhysicalComponent(attachedEntity) {
 
     override fun physicsTick() {
         super.physicsTick()

@@ -19,6 +19,7 @@ public class EventHandler{
   public static void addEventListener(Object listener, Object invoker){
     Class<?> klass = listener.getClass();
 
+
     while(klass != Object.class){
       List<Method> allMethods = new ArrayList<Method>(Arrays.asList(klass.getDeclaredMethods()));
 

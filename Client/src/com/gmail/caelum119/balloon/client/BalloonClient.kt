@@ -5,7 +5,7 @@ package com.gmail.caelum119.balloon.client
  */
 class BalloonClient {
 
-    val clientEngineInstance = ClientEngine()
+//    val clientEngineInstance = ClientEngine()
 
     fun main(args: Array<String>) {
 

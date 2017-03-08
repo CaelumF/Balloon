@@ -20,7 +20,6 @@ abstract class EngineInstance {
     var allComponents = HashMap<Class<*>, ArrayList<Component>>()
 
     init {
-
         Executors.newScheduledThreadPool(1).scheduleWithFixedDelay({
             chunks.forEach(Chunk::tick)
         }, 16.toLong(), 16.toLong(), TimeUnit.MILLISECONDS)

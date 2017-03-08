@@ -1,49 +1,52 @@
 package com.gmail.caelum119.balloon.world.scenegraph
 
-import com.ardor3d.math.Quaternion
-import com.ardor3d.scenegraph.Node
-import com.ardor3d.scenegraph.Spatial
+
+import com.gmail.caelum119.balloon.world.scenegraph.visual.BalloonNode
 import java.util.*
 import javax.vecmath.Quat4f
 
 /**
  * First created 5/16/2016 in Client
- * Represents a entity that exists physically and is also visually available,
+ * Represents a entity that exists physically and is also visually available. Provides an interface to interact with the
+ * renderer
  *
  * TODO: VisualEntities could have separate locations from GeneralEntities for interpolation purpose, JBullet's interpolation may not integrate efficiently.
  *
  */
-class VisualEntity constructor(visualModelInstance: Spatial, residingChunk: Chunk): GeneralEntity(residingChunk) {
+abstract class VisualEntity(val physicalEntity: PhysicalEntity) :
+        GeneralEntity(physicalEntity.residingChunk) {
+    abstract val node: BalloonNode
 
     /**
-     * Used to render a3dNode
+     * Used to render node
      */
-    val a3dNode: Node
+
     val onVisualInfoUpdate = ArrayList<(updating: VisualEntity) -> Unit>()
     var inRenderingRange = false
+
     init {
-        a3dNode = Node("")
-        a3dNode.attachChild(visualModelInstance)
+
     }
 
 //    constructor(visualModel: ModelConstruct<Any>, partOf: GeneralEntity, constructArgs: ModelConstruct.ConstructorParameters) : this(visualModel.visualA3DConstructor.invoke(constructArgs), )
 
     /**
-     * Updates the location of [a3dNode] to reflect the physical instance from [partOf]
+     * Updates the location of [node] to reflect the physical instance from [partOf]
      * TODO: Extrapolation from the information imposed on this object using this method. Interpolation would
      * increase latency
      */
-    fun updateSpatialInformation(physicalEntity: PhysicalEntity) {
+    open fun updateSpatialInformation(physicalEntity: PhysicalEntity) {
         onVisualInfoUpdate.forEach { it.invoke(this) }
-
         val physicalTransform = physicalEntity.getTransform()
         val physicalRotation: Quat4f = physicalTransform.getRotation(Quat4f())
-        val (x, y, z) = physicalTransform.locationToXYZDouble()
-        val (rx, ry, rz, rw) = physicalRotation.rotationToXYZWDouble()
 
-        a3dNode.setTranslation(x, y, z)
-        a3dNode.setRotation(Quaternion(rx, ry, rz, rw))
+        node.translation.x = physicalTransform.origin.x
+        node.translation.y = physicalTransform.origin.y
+        node.translation.z = physicalTransform.origin.z
+
+        node.rotation.x = physicalRotation.x
+        node.rotation.y = physicalRotation.y
+        node.rotation.z = physicalRotation.z
+        node.rotation.w = physicalRotation.w
     }
-
-
 }

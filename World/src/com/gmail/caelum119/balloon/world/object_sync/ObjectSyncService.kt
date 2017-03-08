@@ -2,7 +2,6 @@ package com.gmail.caelum119.balloon.world.object_sync
 
 
 import com.gmail.caelum119.balloon.world.object_sync.deprecated.TransferableObject
-import com.gmail.caelum119.balloon.world.object_sync.tags.WorldSyncTag
 import com.gmail.caelum119.utils.network.Connection
 import java.util.*
 import kotlin.reflect.KProperty
@@ -30,7 +29,7 @@ object ObjectSyncService {
 
     private fun updateRecipents() {
         recipients.forEach {
-            it.sendTag(WorldSyncTag(deltaClasses))
+//            it.sendTag(WorldSyncTag(deltaClasses))
         }
     }
 

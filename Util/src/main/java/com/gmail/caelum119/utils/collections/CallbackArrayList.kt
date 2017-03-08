@@ -1,12 +1,14 @@
 package com.gmail.caelum119.utils.collections
 
+import java.io.Serializable
 import java.util.*
 import java.util.Collection
 
 /**
  * First created 1/5/2017 in BalloonEngine
  */
-class CallbackArrayList<E>(val elementAdded: (elementAdded: E) -> Unit, val elementRemoved: (elementRemoved: E) -> Unit) : ArrayList<E>() {
+class CallbackArrayList<E>(val elementAdded: (elementAdded: E) -> Unit, val elementRemoved: (elementRemoved: E) ->
+Unit) : ArrayList<E>(), Serializable {
     /**
      * Appends the specified element to the end of this list.
      * Also, calls [elementAdded] with [element]
@@ -15,7 +17,6 @@ class CallbackArrayList<E>(val elementAdded: (elementAdded: E) -> Unit, val elem
      * @return <tt>true</tt> (as specified by [Collection.add])
      */
     override fun add(element: E): Boolean {
-
         val result = super.add(element)
         elementAdded(element)
         return result

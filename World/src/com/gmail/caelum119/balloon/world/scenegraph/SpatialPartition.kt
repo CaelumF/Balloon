@@ -10,4 +10,12 @@ interface SpatialPartition<ParentType, ChildType, ChildStorageType : Collection<
     fun addChild(entityToAdd: ChildType): Boolean
 
     fun removeChild(child: ChildType): Boolean
+
+    fun getNorth(): SpatialPartition<*, *, *>
+    fun getEast(): SpatialPartition<*, *, *>
+    fun getWest(): SpatialPartition<*, *, *>
+    fun getSouth(): SpatialPartition<*, *, *>
+    fun getAbove(): SpatialPartition<*, *, *>
+    fun getBellow(): SpatialPartition<*, *, *>
+
 }

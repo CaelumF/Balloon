@@ -7,5 +7,6 @@ import com.gmail.caelum119.utils.network.NetworkTag
  * First created 10/2/2016 in BalloonEngine
  */
 class WorldSyncTag(val propertiesToSync: SyncCategory<*>): NetworkTag() {
+//    constructor(propertiesToSync: HashMap<TransferableObject, HashMap<KProperty<*>, Any>>) : this()
 
 }

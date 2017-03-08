@@ -2,6 +2,8 @@ package com.gmail.caelum119.balloon.world.scenegraph
 
 import com.gmail.caelum119.balloon.world.engine.components.Component
 import com.gmail.caelum119.balloon.world.engine.components.VisualComponent
+import com.gmail.caelum119.utils.event.EventCollection
+import com.gmail.caelum119.utils.event.ListenerInterface
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -13,8 +15,7 @@ import kotlin.reflect.KClass
  * TODO: Add more categories.
  */
 interface CategorizingNSP : NonintermittentSpatialPartition<Any, ArrayList<GeneralEntity>> {
-    override var children: ArrayList<GeneralEntity>
-    override val allEntities: ArrayList<GeneralEntity>
+
 
     fun getAllVisualEntities(): ArrayList<VisualEntity>
     fun getAllPhysicalEntities(): ArrayList<PhysicalEntity>
@@ -22,6 +23,9 @@ interface CategorizingNSP : NonintermittentSpatialPartition<Any, ArrayList<Gener
     fun getAllComponentsByType(): HashMap<Class<Component>, ArrayList<Component>>
     fun getAllVisualComponents(): ArrayList<VisualComponent>
     fun getAllVisualComponentsByType(): HashMap<Class<Component>, ArrayList<VisualComponent>>
+
+    val events: ListenerInterface
+    val eventTriggerer: EventCollection
 
     /**
      * Returns this as a physical entity, if it is one. Null otherwise.
@@ -83,5 +87,4 @@ interface CategorizingNSP : NonintermittentSpatialPartition<Any, ArrayList<Gener
         val listByThatType: ArrayList<T>? = getAllComponentsByType()[type as Class<Component>] as ArrayList<T>
         return listByThatType ?: ArrayList<T>()
     }
-
 }

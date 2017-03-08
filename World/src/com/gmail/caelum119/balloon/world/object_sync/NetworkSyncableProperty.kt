@@ -146,7 +146,6 @@ open class Builder<T : Any, T2 : TransmittablePropertySequence>(val correspondin
     inline fun <reified T> reflectValuesOnto(propertyReceiver: T) {
 
         for (receiverField in T::class.javaClass.fields) {
-
             val classUID: Int = registeredClassUIDs[T::class.javaClass]?.toInt()
                     ?: throw Exception("Class ${T::class.javaClass.name} not registered")
             val fieldUID: Int = registeredFieldUIDs[Pair(classUID, receiverField.name)]
@@ -177,11 +176,7 @@ inline fun <reified T> getTransmittablePropertySequence(vararg properties: Any):
     return TransmittablePropertySequence(registeredClassUIDs[T::class.javaClass] ?: 0, *transmittableProperties.toTypedArray())
 }
 
-interface PropertyStorer {
-
-}
-
-class TransmittablePropertyValue(val value: Any): Serializable {
+class TransmittablePropertyValue(val value: Any) : Serializable {
     /**
      * Field ID for reflecting onto objects.
      * TODO: Automatically generate, and agree across associated Engines.
@@ -196,7 +191,7 @@ class TransmittablePropertyValue(val value: Any): Serializable {
  * to 'load' caches, saves and keep multiplayer games in sync.
  */
 open class TransmittablePropertySequence(val classUID: Long, vararg properties: TransmittablePropertyValue)
-:Serializable {
+    : Serializable {
     val propertyList: Array<out TransmittablePropertyValue>
     val propertyMap = HashMap<Int, TransmittablePropertyValue>()
 
@@ -220,7 +215,7 @@ open class TransmittablePropertySequence(val classUID: Long, vararg properties: 
  *
  * TODO: Speed up by only paying attention to delta data.
  */
-fun getDecodedObjectFromTPS(of: Object): TransmittablePropertySequence{
+fun getDecodedObjectFromTPS(of: Object): TransmittablePropertySequence {
     val klass = of.`class`
     val relevantICP = importantClassProtocols[klass] ?: throw Exception("No ICP is defined for $klass")
     val d = relevantICP.importantPropertyRetriever

@@ -1,9 +1,8 @@
 package com.gmail.caelum119.balloon.server
 
 
-import com.gmail.caelum119.balloon.server.network_events.WorldChunkRequest
 import com.gmail.caelum119.balloon.world.object_sync.ObjectSyncService
-import com.gmail.caelum119.balloon.world.object_sync.tags.WorldSyncTag
+import com.gmail.caelum119.balloon.world.object_sync.tags.ClientIdentifyAs
 import com.gmail.caelum119.utils.event.NetworkEvent
 import com.gmail.caelum119.utils.network.server.TCPServer
 import java.util.*
@@ -13,7 +12,7 @@ import java.util.*
  */
 class BalloonServer(val serverSettings: ServerSettings) {
     val world = ServerEngine()
-    val server = TCPServer(4030)
+    val server = TCPServer(45839)
     val connectedClients = ArrayList<ConnectedBalloonClient>()
 
     init {
@@ -24,14 +23,14 @@ class BalloonServer(val serverSettings: ServerSettings) {
             ObjectSyncService.recipients.add(newClient.connection)
             connectedClients.add(ConnectedBalloonClient(newClient.connection))
             newClient.connection.addListener(this, this)
-
-            //Send entire current world.
-            //TODO: Filter out information irrelevant to that specific client(extremely distant objects, etc.)
-            newClient.connection.sendTag(WorldSyncTag(world.allSyncCategories))
         }
     }
 
-    @NetworkEvent fun serveWorldChunkRequest(worldChunkRequest: WorldChunkRequest) {
-
+    @NetworkEvent fun identifyClient(identifyingClient: ClientIdentifyAs){
+        identifyingClient
     }
+}
+
+fun main(args: Array<String>) {
+    BalloonServer(ServerSettings())
 }

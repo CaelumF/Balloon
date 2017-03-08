@@ -15,19 +15,19 @@ class SyncCategory<T>(var parentSyncCategory: SyncCategory<*>? = null) {
     var containedSyncableObjects = ArrayList<T>()
 
     init {
-        defineSyncMethod<SyncCategory<*>, TransmittablePropertySequence> { saidObject ->
-            addProperties(SyncCategory<*>::containedSyncableObjects)
-
-            importantPropertyRetriever{
-                getTPSFromProperties(saidObject)
-            }
-
-            instanceBuilder {
-                val propertyReceiver = SyncCategory<Any>()
-                reflectValuesOnto(propertyReceiver)
-                return@instanceBuilder propertyReceiver
-            }
-        }
+//        defineSyncMethod<SyncCategory<*>, TransmittablePropertySequence> { saidObject ->
+////            addProperties(SyncCategory<*>::containedSyncableObjects)
+//
+//            importantPropertyRetriever{
+//                getTPSFromProperties(saidObject)
+//            }
+//
+//            instanceBuilder {
+//                val propertyReceiver = SyncCategory<Any>()
+//                reflectValuesOnto(propertyReceiver)
+//                return@instanceBuilder propertyReceiver
+//            }
+//        }
     }
 
     override fun equals(other: Any?): Boolean {

@@ -22,17 +22,13 @@ class ListenerInterface(private val eventCollection: EventCollection) {
     }
 }
 
-abstract class EventType() {
+abstract class EventType() {}
 
-}
 
-/**
- *
- */
 open class EventCollection() {
     val listeners = HashMap<Class<*>, ArrayList<Callback<*>>>()
 
-    inline fun <reified ET : EventType> triggerEvent(eventInstance: ET) {
+    public inline fun <reified ET : EventType> triggerEvent(eventInstance: ET) {
         listeners[ET::class.java]?.forEach {
             (it as Callback<ET>).method(eventInstance)
         }

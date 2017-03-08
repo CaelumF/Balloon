@@ -94,6 +94,11 @@ abstract class Connection(): Runnable {
    */
   abstract fun <listeningFoR> addListener(listeningFor: Class<out NetworkTag>, onReceive: (listeningFoR) -> Unit)
 
+  /**
+   * Registers [onReceive] to be called whenever a tag of type [listeningFor] is received.
+   */
+  open fun <listeningFoR> addListener(onReceive: (listeningFoR) -> Unit){}
+
   fun sendTag(tag: NetworkTag) {
     sendPacketImmediately(*tag.getData())
   }

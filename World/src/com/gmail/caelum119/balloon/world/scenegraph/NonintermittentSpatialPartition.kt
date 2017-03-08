@@ -1,5 +1,6 @@
 package com.gmail.caelum119.balloon.world.scenegraph
 
+import com.gmail.caelum119.balloon.world.engine.BulletPhysicsArea
 import com.gmail.caelum119.balloon.world.engine.components.Component
 import java.util.*
 
@@ -17,5 +18,5 @@ interface NonintermittentSpatialPartition<ParentType, EntityStorageType : Collec
 
     val allEntities: EntityStorageType
     val allComponents: ArrayList<Component>
-
+    val physicsArea: BulletPhysicsArea
 }

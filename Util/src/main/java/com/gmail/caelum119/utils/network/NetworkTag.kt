@@ -7,7 +7,7 @@ import java.util.*
  * An abstract class for custom networking tags.
  * @param E: The type of any child class extending this, should always be the class that is extending it.
  */
-public abstract class NetworkTag( ) : Serializable{
+abstract class NetworkTag : Serializable{
   /**
    * Copmanion object to manage network tags.
    */

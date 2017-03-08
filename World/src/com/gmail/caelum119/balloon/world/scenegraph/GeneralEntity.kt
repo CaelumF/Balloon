@@ -4,6 +4,7 @@ import com.gmail.caelum119.balloon.world.engine.components.Component
 import com.gmail.caelum119.utils.event.EventCollection
 import com.gmail.caelum119.utils.event.EventType
 import com.gmail.caelum119.utils.event.ListenerInterface
+import java.io.Serializable
 import java.util.*
 
 /**
@@ -13,7 +14,7 @@ import java.util.*
  * Entities may have Components and their associated Systems attached to them.
  */
 //TODO: Remove smelly-ness regarding having the parent set it's subject's parent for it.
-open class GeneralEntity(residingChunk: CategorizingNSP) {
+open class GeneralEntity(residingChunk: CategorizingNSP, vararg componentsToAdd: Component): Serializable {
 
     var residingChunk: CategorizingNSP = residingChunk
         set(newChunk) {
@@ -22,6 +23,10 @@ open class GeneralEntity(residingChunk: CategorizingNSP) {
     val subModels = ArrayList<GeneralEntity>()
     private val components = HashMap<Class<Component>, ArrayList<Component>>()
     val allComponents = ArrayList<Component>()
+
+    init {
+        componentsToAdd.forEach { addComponent(it) }
+    }
 
     fun addComponent(componentToAdd: Component) {
         eventTrigerer.triggerEvent(EventTypes.E_COMPONENT_ADDED(componentToAdd))
@@ -47,6 +52,6 @@ open class GeneralEntity(residingChunk: CategorizingNSP) {
         class E_CHUNK_CHANGED(val newChunk: CategorizingNSP) : EventType()
     }
 
-    private val eventTrigerer = EventTypes()
-    public val events = ListenerInterface(eventTrigerer)
+    open val eventTrigerer = EventTypes()
+    open public val events = ListenerInterface(eventTrigerer)
 }

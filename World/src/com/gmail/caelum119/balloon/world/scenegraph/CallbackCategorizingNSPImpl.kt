@@ -6,6 +6,7 @@ import com.gmail.caelum119.utils.collections.CallbackArrayList
 import com.gmail.caelum119.utils.event.EventCollection
 import com.gmail.caelum119.utils.event.EventType
 import com.gmail.caelum119.utils.event.ListenerInterface
+import java.io.Serializable
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -17,7 +18,7 @@ import kotlin.reflect.KClass
  * Whenever a entity or component is added, appropriate [callbacks] will be called.
  */
 //CONSIDER: Instead of housing the event system in this class, simply expose the event system of individual
-abstract class CallbackCategorizingNSPImpl : CategorizingNSP {
+abstract class CallbackCategorizingNSPImpl : CategorizingNSP, Serializable{
 
     override val allEntities = newCallbackArrayList<GeneralEntity, EventTypes.E_ENTITY_ADDED, EventTypes.E_ENTITY_REMOVED>()
 //    override val allComponents = newCallbackArrayList<Component, EventTypes.>() blah blah, useless code to be replaced
@@ -67,6 +68,7 @@ abstract class CallbackCategorizingNSPImpl : CategorizingNSP {
 
     override fun addComponent(component: Component) {
         super.addComponent(component)
+        eventTrigerer.triggerEvent(EventTypes.C_COMPONENT_ADDED(component.attachedEntity, component))
     }
 
     /**
@@ -101,9 +103,9 @@ abstract class CallbackCategorizingNSPImpl : CategorizingNSP {
         class E_VISUAL_ENTITY_ADDED(val generalEntity: GeneralEntity) : EventType()
         class E_VISUAL_ENTITY_REMOVED(val generalEntity: GeneralEntity) : EventType()
         /////Component
-        class C_COMPONENT_ADDED(val generalEntity: GeneralEntity) : EventType()
+        class C_COMPONENT_ADDED(val generalEntity: GeneralEntity, val component: Component) : EventType()
 
-        class C_COMPONENT_REMOVED(val generalEntity: GeneralEntity) : EventType()
+        class C_COMPONENT_REMOVED(val generalEntity: GeneralEntity, val component: Component) : EventType()
     }
 
     protected open val eventTrigerer = EventTypes()
